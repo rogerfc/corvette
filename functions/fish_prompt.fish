@@ -1,38 +1,116 @@
-# ⌘ git:master+ ansible $
-# logo vcs:branch,dirty? dir $
+# based on "Informative Vcs"
+# by author: Mariusz Smykula <mariuszs at gmail.com>
 
-function fish_prompt
+function fish_prompt --description 'Write out the prompt'
     set -l last_status $status
-    set -q corvette_logo; or set -l corvette_logo "⋊>"
-    set -l vcs_dirty_char '+'
 
-    set -l vcs_logo_color $fish_color_match
-    set -l vcs_logo_error_color $fish_color_error
-    set -l vcs_type_color $fish_color_normal
-    set -l vcs_branch_color $fish_color_cwd
-    set -l vcs_dirty_color $fish_color_status
-
-    set -l cmd_status_color $vcs_logo_color
-    if test $last_status -ne 0
-        set cmd_status_color $vcs_logo_error_color
+    if not set -q __fish_git_prompt_show_informative_status
+        set -g __fish_git_prompt_show_informative_status 1
+    end
+    if not set -q __fish_git_prompt_hide_untrackedfiles
+        set -g __fish_git_prompt_hide_untrackedfiles 1
     end
 
-    echo -sn (set_color $cmd_status_color) "$corvette_logo " (set_color normal)
-
-    get_vcs_type
-    if test $vcs_type
-        echo -sn " "  (set_color $vcs_type_color) $vcs_type ":"  (set_color $vcs_branch_color) $vcs_branch
-        if test -n "$vcs_dirty"
-            echo -sn (set_color $vcs_dirty_color) $vcs_dirty_char
-        end
-        echo -sn (set_color normal)
+    if not set -q __fish_git_prompt_color_branch
+        set -g __fish_git_prompt_color_branch magenta --bold
+    end
+    if not set -q __fish_git_prompt_showupstream
+        set -g __fish_git_prompt_showupstream "informative"
+    end
+    if not set -q __fish_git_prompt_char_upstream_ahead
+        set -g __fish_git_prompt_char_upstream_ahead "↑"
+    end
+    if not set -q __fish_git_prompt_char_upstream_behind
+        set -g __fish_git_prompt_char_upstream_behind "↓"
+    end
+    if not set -q __fish_git_prompt_char_upstream_prefix
+        set -g __fish_git_prompt_char_upstream_prefix ""
     end
 
-    if eval $corvette_short_path
-        echo -sn " " (basename (prompt_pwd))
-    else
-        echo -sn " " (prompt_pwd)
+    if not set -q __fish_git_prompt_char_stagedstate
+        set -g __fish_git_prompt_char_stagedstate "·"
+    end
+    if not set -q __fish_git_prompt_char_dirtystate
+        set -g __fish_git_prompt_char_dirtystate "+"
+    end
+    if not set -q __fish_git_prompt_char_untrackedfiles
+        set -g __fish_git_prompt_char_untrackedfiles "…"
+    end
+    if not set -q __fish_git_prompt_char_conflictedstate
+        set -g __fish_git_prompt_char_conflictedstate "x"
+    end
+    if not set -q __fish_git_prompt_char_cleanstate
+        set -g __fish_git_prompt_char_cleanstate "v"
     end
 
-    echo -sn (set_color $cmd_status_color) " \$ " (set_color normal)
+    if not set -q __fish_git_prompt_color_dirtystate
+        set -g __fish_git_prompt_color_dirtystate blue
+    end
+    if not set -q __fish_git_prompt_color_stagedstate
+        set -g __fish_git_prompt_color_stagedstate yellow
+    end
+    if not set -q __fish_git_prompt_color_invalidstate
+        set -g __fish_git_prompt_color_invalidstate red
+    end
+    if not set -q __fish_git_prompt_color_untrackedfiles
+        set -g __fish_git_prompt_color_untrackedfiles $fish_color_normal
+    end
+    if not set -q __fish_git_prompt_color_cleanstate
+        set -g __fish_git_prompt_color_cleanstate green --bold
+    end
+
+    if not set -q __fish_prompt_normal
+        set -g __fish_prompt_normal (set_color normal)
+    end
+
+    set -l color_cwd
+    set -l prefix
+    set -l suffix
+    switch "$USER"
+        case root toor
+            if set -q fish_color_cwd_root
+                set color_cwd $fish_color_cwd_root
+            else
+                set color_cwd $fish_color_cwd
+            end
+            set suffix '#'
+        case '*'
+            set color_cwd $fish_color_cwd
+            set suffix '$'
+    end
+
+    # PWD
+    # echo -sn (set_color $cmd_status_color) "$corvette_logo " (set_color normal)
+    # get_vcs_type
+    # if test $vcs_type
+    #     echo -sn " "  (set_color $vcs_type_color) $vcs_type ":"  (set_color $vcs_branch_color) $vcs_branch
+    #     if test -n "$vcs_dirty"
+    #         echo -sn (set_color $vcs_dirty_color) $vcs_dirty_char
+    #     end
+    #     echo -sn (set_color normal)
+    # end
+    #
+    # if eval $corvette_short_path
+    #     echo -sn " " (basename (prompt_pwd))
+    # else
+    #     echo -sn " " (prompt_pwd)
+    # end
+    #
+    # echo -sn (set_color $cmd_status_color) " \$ " (set_color normal)
+
+
+    set_color $color_cwd
+    if not test $last_status -eq 0
+        set_color $fish_color_error
+    end
+    echo -n $corvette_logo
+    set_color normal
+    printf '%s ' (__fish_vcs_prompt)
+    echo -n (basename (prompt_pwd))
+    set_color $color_cwd
+    if not test $last_status -eq 0
+        set_color $fish_color_error
+    end
+    echo -n "$suffix "
+    set_color normal
 end
