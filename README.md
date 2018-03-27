@@ -17,4 +17,4 @@ fisher rogerfc/corvette
 [slack-link]: https://fisherman-wharf.herokuapp.com
 [slack-badge]: https://fisherman-wharf.herokuapp.com/badge.svg
 [fisherman]: https://github.com/fisherman/fisherman
-[corvette]: https://user-images.githubusercontent.com/1453692/37966183-f7770f4e-31c7-11e8-88d0-1c75bd040831.png
+[corvette]: https://user-images.githubusercontent.com/1453692/37968566-d4d1f088-31ce-11e8-9899-f6bb46846e7a.png

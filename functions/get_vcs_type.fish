@@ -1,3 +1,5 @@
+# adapted from somewhere else, cannot find the original reference
+
 function get_vcs_type
 
     function __fast_find_git_root
