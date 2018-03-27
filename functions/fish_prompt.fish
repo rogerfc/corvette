@@ -17,7 +17,7 @@ function fish_prompt
         set cmd_status_color $vcs_logo_error_color
     end
 
-    echo -sn (set_color -o $cmd_status_color) "$corvette_logo " (set_color normal)
+    echo -sn (set_color $cmd_status_color) "$corvette_logo " (set_color normal)
 
     get_vcs_type
     if test $vcs_type
@@ -34,5 +34,5 @@ function fish_prompt
         echo -sn " " (prompt_pwd)
     end
 
-    echo -sn (set_color -o $cmd_status_color) " \$ " (set_color normal)
+    echo -sn (set_color $cmd_status_color) " \$ " (set_color normal)
 end
