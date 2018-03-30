@@ -6,7 +6,7 @@ function fish_prompt
     set -q corvette_logo; or set -l corvette_logo "⋊>"
     set -l vcs_dirty_char '+'
 
-    set -l vcs_logo_color $fish_color_match
+    set -l vcs_logo_color $fish_color_normal
     set -l vcs_logo_error_color $fish_color_error
     set -l vcs_type_color $fish_color_normal
     set -l vcs_branch_color $fish_color_cwd
